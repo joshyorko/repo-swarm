@@ -189,6 +189,43 @@ Or edit `prompts/repos.json` directly:
 
 ## Ecosystem
 
+```mermaid
+graph TB
+    User([👤 User / AI Agent])
+    
+    CLI["⌨️ reposwarm-cli<br/><i>Go binary — setup, investigate,<br/>diagnose, results</i>"]
+    API["🔌 reposwarm-api<br/><i>REST API server — repos,<br/>workflows, prompts</i>"]
+    UI["📊 reposwarm-ui<br/><i>Next.js dashboard —<br/>browse investigations</i>"]
+    Core["🤖 reposwarm<br/><i>Core engine — Temporal<br/>workflows + Claude analysis</i>"]
+    
+    Temporal[("⏱ Temporal<br/>Orchestration")]
+    Git[("🌐 Git Providers<br/>GitHub · GitLab · CodeCommit<br/>Bitbucket · Azure DevOps")]
+    LLM[("🧠 LLM Provider<br/>Anthropic · Bedrock · LiteLLM")]
+    Hub[("📋 Results Hub<br/>.arch.md files")]
+    
+    User -->|commands| CLI
+    User -->|browser| UI
+    CLI -->|HTTP| API
+    UI -->|HTTP| API
+    API -->|workflows| Temporal
+    Temporal -->|tasks| Core
+    Core -->|clone repos| Git
+    Core -->|analyze code| LLM
+    Core -->|commit results| Hub
+    CLI -.->|"manages<br/>(start/stop/upgrade)"| API
+    CLI -.->|manages| UI
+    CLI -.->|manages| Core
+    
+    style CLI fill:#2d3748,color:#fff,stroke:#4299e1
+    style API fill:#2d3748,color:#fff,stroke:#48bb78
+    style UI fill:#2d3748,color:#fff,stroke:#ed8936
+    style Core fill:#2d3748,color:#fff,stroke:#9f7aea
+    style Temporal fill:#1a202c,color:#fff,stroke:#718096
+    style Git fill:#1a202c,color:#fff,stroke:#718096
+    style LLM fill:#1a202c,color:#fff,stroke:#718096
+    style Hub fill:#1a202c,color:#fff,stroke:#718096
+```
+
 | Project | Description | Install |
 |---------|-------------|---------|
 | ⌨️ [**reposwarm-cli**](https://github.com/reposwarm/reposwarm-cli) | CLI — setup, investigate, diagnose, results | `curl -fsSL .../install.sh \| sh` |
