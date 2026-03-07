@@ -47,9 +47,25 @@ class WorkflowConfig:
         Raises:
             ValueError: If model name is not in valid list
         """
-        if not isinstance(model_name, str) or model_name not in WorkflowConfig.VALID_CLAUDE_MODELS:
+        if not isinstance(model_name, str):
+            raise ValueError(f"Invalid claude_model '{model_name}'. Must be a string")
+        
+        # Accept Bedrock-style model IDs (us.anthropic.*, anthropic.*, or IDs with :version suffix)
+        if model_name.startswith(("us.anthropic.", "anthropic.")) or ":0" in model_name:
+            return model_name
+        
+        # Accept models with region prefix stripped
+        stripped = model_name
+        for prefix in ("us.", "eu.", "ap."):
+            stripped = stripped.removeprefix(prefix)
+        stripped = stripped.removesuffix("-v1:0").removesuffix(":0")
+        
+        if stripped in WorkflowConfig.VALID_CLAUDE_MODELS:
+            return model_name
+        
+        if model_name not in WorkflowConfig.VALID_CLAUDE_MODELS:
             valid_models_str = ", ".join(WorkflowConfig.VALID_CLAUDE_MODELS)
-            raise ValueError(f"Invalid claude_model '{model_name}'. Must be one of: {valid_models_str}")
+            raise ValueError(f"Invalid claude_model '{model_name}'. Must be one of: {valid_models_str} (or Bedrock model ID like us.anthropic.claude-*)")
         return model_name
     
     @staticmethod
