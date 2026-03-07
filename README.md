@@ -48,16 +48,15 @@ That's it. The CLI handles setup, configuration, investigation, diagnostics, and
 
 ### Prerequisites
 
-- **Docker must be running** (not just installed) — needed for Temporal and local DynamoDB
-- Python 3.11+ for the worker
-- Node.js 22+ for the API server
+- **Docker must be running** (not just installed) — all services run as containers
+- **Git** — for cloning repositories during investigation
 
 ### Bedrock Users
 
 If using Amazon Bedrock, the worker needs these env vars (set automatically by the CLI):
 - `CLAUDE_CODE_USE_BEDROCK=1`
-- `CLAUDE_PROVIDER=bedrock`
 - `AWS_REGION=us-east-1` (or your region)
+- `ANTHROPIC_MODEL=us.anthropic.claude-sonnet-4-20250514-v1:0` (or your preferred model)
 
 Auth options: IAM role (recommended), access keys, AWS profile, or Bedrock API keys.
 See [CLI docs](https://github.com/reposwarm/reposwarm-cli#-configure-llm-provider) for setup.
